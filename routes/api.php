@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\WebsiteFormController;
-
+use Illuminate\Support\Facades\App;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,6 +19,11 @@ use App\Http\Controllers\WebsiteFormController;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('/', function () {
+    echo App::version();
+});
+
 
 Route::group(['prefix' => 'website-form'], function () {
     Route::get('/', [WebsiteFormController::class, 'index']);
