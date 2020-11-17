@@ -15,12 +15,12 @@ class CreateWebsiteFormsTable extends Migration
     {
         Schema::create('website_forms', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('state');
-            $table->string('email');
-            $table->string('phone');
-            $table->string('items_interested');
-            $table->string('items_to_sell');
+            $table->string('name')->nullable();
+            $table->string('state')->nullable();
+            $table->string('email')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('items_interested')->nullable();
+            $table->string('items_to_sell')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
