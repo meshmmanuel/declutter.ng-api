@@ -1,15 +1,12 @@
 <?php
 // Validation messages
 return [
-    // 'name.required' => 'A title is required',
-    // 'description.required' => 'A message is required',
-    // 'selling_price.required' => 'A message is required',
-    // 'video_file.required' => 'A product video is required.',
-    // 'video_file.required' => 'A product video is required.',
-    // 'defect.*.description.re' => 'Product defect description is requried',
-    // 'defect.*.video.required_with' => 'Product defect video is required',
-    // 'defect.*.images' => 'sometimes',
-
+    'name.required' => ':attribute is required',
+    'description.required' => ':attribute is required',
+    'selling_price.required' => ':attribute is required',
+    'video_file.required' => ':attribute is required.',
+    'defect.*.description.re' => ':attribute is requried',
+    'defect.*.video.required_with' => ':attribute is required',
     'name.required' => ':attribute is required.',
     'name.max' => ':attribute is required.',
     'email.required' => ':attribute is required.',
