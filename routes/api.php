@@ -27,19 +27,37 @@ Route::get('/', function () {
 });
 
 
+// Route::group(['prefix' => 'website-form'], function () {
+//     Route::get('/', [WebsiteFormController::class, 'index']);
+//     Route::post('/', [WebsiteFormController::class, 'store']);
+// });
+
+// Route::group(['prefix' => 'auth'], function () {
+//     Route::post('/register', [AuthController::class, 'register']);
+// });
+
+// Route::group(['prefix' => 'products', 'middleware' => 'auth:api'], function () {
+//     Route::get('/', [ProductController::class, 'index']);
+//     Route::post('/', [ProductController::class, 'store']);
+//     Route::get('/{id}', [ProductController::class, 'show']);
+//     Route::put('/{id}', [ProductController::class, 'update']);
+//     Route::delete('/{id}', [ProductController::class, 'delete']);
+// });
+
+
 Route::group(['prefix' => 'website-form'], function () {
-    Route::get('/', [WebsiteFormController::class, 'index']);
-    Route::post('/', [WebsiteFormController::class, 'store']);
+    Route::get('/', 'WebsiteFormController@index');
+    Route::post('/', 'WebsiteFormController@store');
 });
 
 Route::group(['prefix' => 'auth'], function () {
-    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/register', 'AuthController@register');
 });
 
 Route::group(['prefix' => 'products', 'middleware' => 'auth:api'], function () {
-    Route::get('/', [ProductController::class, 'index']);
-    Route::post('/', [ProductController::class, 'store']);
-    Route::get('/{id}', [ProductController::class, 'show']);
-    Route::put('/{id}', [ProductController::class, 'update']);
-    Route::delete('/{id}', [ProductController::class, 'delete']);
+    Route::get('/', 'ProductController@index');
+    Route::post('/', 'ProductController@store');
+    Route::get('/{id}', 'ProductController@show');
+    Route::put('/{id}', 'ProductController@update');
+    Route::delete('/{id}', 'ProductController@delete');
 });
