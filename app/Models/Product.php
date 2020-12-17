@@ -1,0 +1,27 @@
+<?php
+
+namespace App\Models;
+
+use App\Modules\EloquentFilter\Filterable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+class Product extends Model
+{
+    use HasFactory, SoftDeletes, Filterable;
+
+    protected $fillable = ['name', 'description', 'selling_price'];
+    protected $with = ['files', 'defect'];
+
+    // Relationships
+    public function files()
+    {
+        return $this->belongsToMany(File::class, 'file_product');
+    }
+
+    public function defect()
+    {
+        return $this->hasOne(Defect::class);
+    }
+}
