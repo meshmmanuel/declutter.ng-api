@@ -18,8 +18,6 @@ class CreateProductsTable extends Migration
             $table->string('name');
             $table->text('description');
             $table->decimal('selling_price', 10, 2);
-            // $table->integer('user_id')->unsigned()->index();
-            // $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();
         });

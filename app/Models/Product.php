@@ -11,7 +11,7 @@ class Product extends Model
 {
     use HasFactory, SoftDeletes, Filterable;
 
-    protected $fillable = ['name', 'description', 'selling_price'];
+    protected $fillable = ['name', 'description', 'selling_price', 'user_id'];
     protected $with = ['files', 'defect'];
 
     // Relationships
@@ -23,5 +23,10 @@ class Product extends Model
     public function defect()
     {
         return $this->hasOne(Defect::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

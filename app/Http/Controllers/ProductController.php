@@ -10,6 +10,7 @@ use App\Services\FileService;
 use App\Services\ProductService;
 use App\Traits\HTTPResponseTrait;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
@@ -48,8 +49,15 @@ class ProductController extends Controller
     public function store(ProductStoreRequest $request)
     {
         try {
+            // product_data
+            $data = [
+                "user_id" => Auth::id(),
+                "name" => $request->name,
+                "description" => $request->description,
+                "selling_price" => $request->selling_price
+            ];
             // create product model
-            $product = $this->productService->create($request->all());
+            $product = $this->productService->create($data);
             // get video
             $product_video = $request->file('video');
             //Move Uploaded File
