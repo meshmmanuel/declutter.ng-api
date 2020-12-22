@@ -61,7 +61,7 @@ class ProductController extends Controller
             // get video
             $product_video = $request->file('video');
             //Move Uploaded File
-            $filePath = 'products/videos';
+            $filePath = 'uploads/videos';
             // Remane file
             $newFileName = renameFile($product_video->getClientOriginalExtension());
             // Upload video to storage
@@ -79,7 +79,7 @@ class ProductController extends Controller
             if (isset($request->images)) {
                 $product_images = $request->images;
                 //Move Uploaded File
-                $filePath = 'products/images';
+                $filePath = 'uploads/images';
                 // Iterate through images
                 foreach ($product_images as $product_image) {
                     // Remane file
@@ -110,7 +110,7 @@ class ProductController extends Controller
                 if (isset($request->defect["video"])) {
                     $defect_video = $request->defect["video"];
                     //Move Uploaded File
-                    $filePath = 'products/videos';
+                    $filePath = 'uploads/videos';
                     // Remane file
                     $newFileName = renameFile($defect_video->getClientOriginalExtension());
                     // Upload video to storage
@@ -129,7 +129,7 @@ class ProductController extends Controller
                 if (isset($request->defect["images"])) {
                     $defect_images = $request->defect["images"];
                     //Move Uploaded File
-                    $filePath = 'products/images';
+                    $filePath = 'uploads/images';
                     // Iterate through images
                     foreach ($defect_images as $defect_image) {
                         // Remane file
