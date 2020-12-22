@@ -61,11 +61,11 @@ class ProductController extends Controller
             // get video
             $product_video = $request->file('video');
             //Move Uploaded File
-            $filePath = 'uploads/videos';
+            $filePath = 'public/products/videos';
             // Remane file
             $newFileName = renameFile($product_video->getClientOriginalExtension());
             // Upload video to storage
-            Storage::disk('local')->put($filePath . $newFileName, file_get_contents($product_video->getRealPath()));
+            Storage::disk('local')->put($filePath . '/' . $newFileName, file_get_contents($product_video->getRealPath()));
             // file data
             $fileData = [
                 'source' => $filePath,
@@ -79,13 +79,13 @@ class ProductController extends Controller
             if (isset($request->images)) {
                 $product_images = $request->images;
                 //Move Uploaded File
-                $filePath = 'uploads/images';
+                $filePath = 'public/products/images';
                 // Iterate through images
                 foreach ($product_images as $product_image) {
                     // Remane file
                     $newFileName = renameFile($product_image->getClientOriginalExtension());
                     // Upload video to storage
-                    Storage::disk('local')->put($filePath . $newFileName, file_get_contents($product_image->getRealPath()));
+                    Storage::disk('local')->put($filePath . '/' . $newFileName, file_get_contents($product_image->getRealPath()));
                     // file data
                     $fileData = [
                         'source' => $filePath,
@@ -110,11 +110,11 @@ class ProductController extends Controller
                 if (isset($request->defect["video"])) {
                     $defect_video = $request->defect["video"];
                     //Move Uploaded File
-                    $filePath = 'uploads/videos';
+                    $filePath = 'public/products/videos';
                     // Remane file
                     $newFileName = renameFile($defect_video->getClientOriginalExtension());
                     // Upload video to storage
-                    Storage::disk('local')->put($filePath . $newFileName, file_get_contents($defect_video->getRealPath()));
+                    Storage::disk('local')->put($filePath . '/' . $newFileName, file_get_contents($defect_video->getRealPath()));
                     // file data
                     $fileData = [
                         'source' => $filePath,
@@ -129,13 +129,13 @@ class ProductController extends Controller
                 if (isset($request->defect["images"])) {
                     $defect_images = $request->defect["images"];
                     //Move Uploaded File
-                    $filePath = 'uploads/images';
+                    $filePath = 'public/products/images';
                     // Iterate through images
                     foreach ($defect_images as $defect_image) {
                         // Remane file
                         $newFileName = renameFile($defect_image->getClientOriginalExtension());
                         // Upload video to storage
-                        Storage::disk('local')->put($filePath . $newFileName, file_get_contents($defect_image->getRealPath()));
+                        Storage::disk('local')->put($filePath . '/' . $newFileName, file_get_contents($defect_image->getRealPath()));
                         // file data
                         $fileData = [
                             'source' => $filePath,
