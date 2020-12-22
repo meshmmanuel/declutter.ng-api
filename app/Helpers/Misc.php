@@ -249,5 +249,5 @@ function getDistance($lat1, $lon1, $lat2, $lon2)
 
 function renameFile($extension)
 {
-    return time() . '' . rand(10000, 90000) . '.' . $extension;
+    return time() . '' . rand(10000, 90000) . '.' . strtolower($extension);
 }
