@@ -14,6 +14,16 @@ class AuthController extends Controller
     public function register(AuthRegisterRequest $request)
     {
         try {
+            // Check if user exists
+            $user = User::where('email', $request->email)->first();
+
+            // Handle returning user
+            if ($user) {
+                $accessToken = $user->createToken('authToken')->accessToken;
+                return $this->successResponse('Returning user', 200, ['user' => $user, 'access_token' => $accessToken]);
+            }
+
+            // Handle new user
             $user_data = [
                 'name' => $request->name,
                 'email' => $request->email,
