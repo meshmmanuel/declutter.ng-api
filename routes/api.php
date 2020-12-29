@@ -54,10 +54,24 @@ Route::group(['prefix' => 'auth'], function () {
     Route::post('/register', 'AuthController@register');
 });
 
+
+Route::group(['prefix' => 'products/incomplete', 'middleware' => 'auth:api'], function () {
+    Route::get('/', 'ProductController@incomplete');
+    Route::post('/complete', 'ProductController@customStore');
+    Route::post('/', 'ProductController@registerIncompleteProduct');
+    Route::delete('/', 'ProductController@deleteIncomplete');
+});
+
 Route::group(['prefix' => 'products', 'middleware' => 'auth:api'], function () {
     Route::get('/', 'ProductController@index');
-    Route::post('/', 'ProductController@store');
     Route::get('/{id}', 'ProductController@show');
     Route::put('/{id}', 'ProductController@update');
-    Route::delete('/{id}', 'ProductController@delete');
+    Route::post('/', 'ProductController@store');
+    Route::delete('/{id}/soft', 'ProductController@softDelete');
+    Route::delete('/{id}/force', 'ProductController@forceDelete');
+});
+
+Route::group(['prefix' => 'files', 'middleware' => 'auth:api'], function () {
+    Route::post('/upload-image', 'FileController@storeImage');
+    Route::post('/upload-video', 'FileController@storeVideo');
 });
