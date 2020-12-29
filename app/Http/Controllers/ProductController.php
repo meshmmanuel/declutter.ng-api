@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CustomStoreRequest;
 use App\Http\Requests\ProductStoreRequest;
+use App\Http\Requests\RegisterIncompleteProductRequest;
 use App\Http\Resources\ProductTransformer;
 use App\Models\Product;
 use App\Services\DefectService;
@@ -12,6 +14,7 @@ use App\Traits\HTTPResponseTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
@@ -170,6 +173,55 @@ class ProductController extends Controller
     }
 
     /**
+     * Store products data
+     */
+    public function customStore(CustomStoreRequest $request)
+    {
+        try {
+            // product_data
+            $data = [
+                "user_id" => Auth::id(),
+                "name" => $request->name,
+                "description" => $request->description,
+                "selling_price" => $request->selling_price,
+                "release_date" => $request->release_date
+            ];
+
+            // Checj if product description has been filled
+            $product = $this->productService->find($request->product_id);
+            if ($product->description !== null) {
+                return $this->errorResponse("Product has already been completed", 400);
+            }
+
+            // create product model
+            $this->productService->update($data, $request->product_id);
+
+            // Check if product has any defect and upload video
+            if ($request->has('defect')) {
+                // Create a product defect
+                $defect_data = [
+                    "description" => $request->defect["description"],
+                    "product_id" => $request->product_id
+                ];
+
+                $defect = $this->defectService->create($defect_data);
+            }
+
+            $product = $this->productService->find($request->product_id);
+
+            return $this->successResponse('Updated a product', 200, $product->load(['files', 'defect']));
+        } catch (\Exception $ex) {
+            if (isset($product)) {
+                $product->forceDelete();
+            }
+            if (isset($defect)) {
+                $defect->forceDelete();
+            }
+            return $this->errorResponse($ex->getMessage(), 400);
+        }
+    }
+
+    /**
      * Display the specified resource.
      *
      * @return \Illuminate\Http\Response
@@ -191,27 +243,129 @@ class ProductController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Product $product)
+    public function update(Request $request, $id)
     {
-        //
+        try {
+            // product_data
+            $data = [
+                "user_id" => Auth::id(),
+                "name" => $request->name,
+                "description" => $request->description,
+                "selling_price" => $request->selling_price,
+                "release_date" => $request->release_date
+            ];
+
+            // create product model
+            $product = $this->productService->create($data);
+
+            // Check if product has any defect and upload video
+            if ($request->has('defect')) {
+                // Create a product defect
+                $defect_data = [
+                    "description" => $request->defect["description"],
+                    "product_id" => $product->id
+                ];
+
+                $defect = $this->defectService->create($defect_data);
+            }
+
+            return $this->successResponse('Create a new product', 201, $product->load(['files', 'defect']));
+        } catch (\Exception $ex) {
+            if (isset($product)) {
+                $product->forceDelete();
+            }
+            return $this->errorResponse($ex->getMessage(), 400);
+        }
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Soft delete the specified resource from storage.
      *
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function softDelete($id)
     {
         try {
             $product = $this->productService->find($id);
             if (!$product) {
                 return $this->errorResponse('Product not found', 404);
             }
-            return $this->successResponse('Deleted a product', 204, $this->productService->delete($id));
+            $this->productService->delete($id, false);
+            return $this->successResponse('Soft deleted a product', 204);
+        } catch (\Exception $ex) {
+            return $this->errorResponse($ex->getMessage(), 400);
+        }
+    }
+
+
+    /**
+     * RemovForce delte the specified resource from storage.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function forceDelete($id)
+    {
+        try {
+            $product = $this->productService->find($id);
+            if (!$product) {
+                return $this->errorResponse('Product not found', 404);
+            }
+            $this->productService->delete($id, true);
+            return $this->successResponse('Force deleted a product', 204);
+        } catch (\Exception $ex) {
+            return $this->errorResponse($ex->getMessage(), 400);
+        }
+    }
+
+    /**
+     * RemovForce delte the specified resource from storage.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function deleteIncomplete()
+    {
+        try {
+            $user_id = Auth::id();
+            $product = $this->productService->incomplete($user_id);
+            if (!$product) {
+                return $this->errorResponse('No incomplete product not found', 404);
+            }
+            $this->productService->deleteIncomplete($user_id);
+            return $this->successResponse('Deleted an incomplete product', 204);
+        } catch (\Exception $ex) {
+            return $this->errorResponse($ex->getMessage(), 400);
+        }
+    }
+
+    public function incomplete()
+    {
+        try {
+            $user_id = Auth::id();
+            return $this->successResponse('Retrieved incomplete product', 200, $this->productService->incomplete($user_id));
+        } catch (\Exception $ex) {
+            return $this->errorResponse($ex->getMessage(), 400);
+        }
+    }
+
+    /**
+     * Register product by product name
+     */
+    public function registerIncompleteProduct(RegisterIncompleteProductRequest $request)
+    {
+        try {
+            $data = [
+                'name' => $request->name,
+                'user_id' => Auth::id()
+            ];
+
+            if ($this->productService->incomplete($data['user_id'])) {
+                return $this->errorResponse("Complete or delete pending incompleted product", 400);
+            }
+
+            $product = $this->productService->create($data);
+            return $this->successResponse('Created an incomplete product', 201, $product);
         } catch (\Exception $ex) {
             return $this->errorResponse($ex->getMessage(), 400);
         }

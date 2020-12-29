@@ -21,6 +21,11 @@ class ProductService
         return Product::filter($this->productFilter)->paginate();
     }
 
+    public function incomplete($user_id)
+    {
+        return Product::where('user_id', $user_id)->whereNull('description')->orWhereNull('selling_price')->first();
+    }
+
     public function find($id)
     {
         return Product::find($id);
@@ -36,9 +41,18 @@ class ProductService
         return Product::where('id', $id)->update($data);
     }
 
-    public function delete($id)
+    public function delete($id, $force = false)
     {
-        return Product::where('id', $id)->delete();
+        if (!$force) {
+            return Product::where('id', $id)->delete();
+        } else {
+            return Product::where('id', $id)->forceDelete();
+        }
+    }
+
+    public function deleteIncomplete($user_id)
+    {
+        return Product::where('user_id', $user_id)->whereNull('description')->orWhereNull('selling_price')->forceDelete();
     }
 
     public function attachFile(Product $product, $file_data)
