@@ -27,6 +27,11 @@ trait HTTPResponseTrait
      */
     public function errorResponse(string $message, int $code = 400)
     {
+        // Check if message has  'user_id' cannot be null
+        if (strpos($message, "'user_id' cannot be null") !== false) {
+            $message = "Unauthenticated";
+        }
+
         return response()->json([
             'success' => false,
             'message' => $message,
