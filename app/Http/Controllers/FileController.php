@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\FileStoreRequest;
 use App\Http\Requests\ImageFileStoreRequest;
 use App\Http\Requests\VideoFileStoreRequest;
+use App\Models\Defect;
 use App\Models\File;
 use App\Services\DefectService;
 use App\Services\FileService;
@@ -195,6 +196,99 @@ class FileController extends Controller
 
             // attach video to product
             $this->productService->attachFile($product, $fileData);
+
+            return $this->successResponse('File upload successful', 201);
+        } catch (\Exception $ex) {
+            return $this->errorResponse($ex->getMessage());
+        }
+    }
+
+    public function storeImageDefect(Request $request)
+    {
+        try {
+            // fetch product
+            $product = $this->productService->find($request->product_id);
+
+            // With product check if defect exists, else create it
+            $defect = Defect::where('product_id', $request->product_id)->first();
+            if (!$defect) {
+                $defect = Defect::create([
+                    'description' => null,
+                    'product_id' => $request->product_id
+                ]);
+            }
+
+            // get file
+            $uploaded_file = $request->file('defect_file');
+
+            // get file extension
+            $extension = $uploaded_file->getClientOriginalExtension();
+
+            // Remane file
+            $newFileName = renameFile($extension);
+
+            // File path
+            $filePath = 'declutter_uploads/videos';
+
+            // Upload video to storage
+            Storage::disk('s3')->put($filePath . '/' . $newFileName, fopen($uploaded_file, 'r+'), 'public');
+
+            // file data
+            $fileData = [
+                'source' => Storage::disk('s3')->url($filePath . '/' . $newFileName),
+                'path' => $filePath . '/' . $newFileName,
+                'file_type' => 'image'
+            ];
+
+
+            // attach video to product
+            $this->defectService->attachFile($defect, $fileData);
+
+            return $this->successResponse('File upload successful', 201);
+        } catch (\Exception $ex) {
+            return $this->errorResponse($ex->getMessage());
+        }
+    }
+
+    public function storeVideoDefect(Request $request)
+    {
+        try {
+            // fetch product
+            $product = $this->productService->find($request->product_id);
+
+            // With product check if defect exists, else create it
+            $defect = Defect::where('product_id', $request->product_id)->first();
+            if (!$defect) {
+                $defect = Defect::create([
+                    'description' => null,
+                    'product_id' => $request->product_id
+                ]);
+            }
+
+            // get file
+            $uploaded_file = $request->file('defect_file');
+
+            // get file extension
+            $extension = $uploaded_file->getClientOriginalExtension();
+
+            // Remane file
+            $newFileName = renameFile($extension);
+
+            // File path
+            $filePath = 'declutter_uploads/videos';
+
+            // Upload video to storage
+            Storage::disk('s3')->put($filePath . '/' . $newFileName, fopen($uploaded_file, 'r+'), 'public');
+
+            // file data
+            $fileData = [
+                'source' => Storage::disk('s3')->url($filePath . '/' . $newFileName),
+                'path' => $filePath . '/' . $newFileName,
+                'file_type' => 'video'
+            ];
+
+            // attach video to product
+            $this->defectService->attachFile($defect, $fileData);
 
             return $this->successResponse('File upload successful', 201);
         } catch (\Exception $ex) {

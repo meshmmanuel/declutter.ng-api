@@ -204,7 +204,7 @@ class ProductController extends Controller
                     "product_id" => $request->product_id
                 ];
 
-                $defect = $this->defectService->create($defect_data);
+                $defect = $this->defectService->updateByProduct($defect_data, $request->product_id);
             }
 
             $product = $this->productService->find($request->product_id);

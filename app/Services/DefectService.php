@@ -35,6 +35,11 @@ class DefectService
         return Defect::where('id', $id)->update($data);
     }
 
+    public function updateByProduct(array $data, $product_id)
+    {
+        return Defect::where('product_id', $product_id)->update($data);
+    }
+
     public function delete($id)
     {
         return Defect::where('id', $id)->delete();

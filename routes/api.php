@@ -72,6 +72,9 @@ Route::group(['prefix' => 'products', 'middleware' => 'auth:api'], function () {
 });
 
 Route::group(['prefix' => 'files', 'middleware' => 'auth:api'], function () {
-    Route::post('/upload-image', 'FileController@storeImage');
-    Route::post('/upload-video', 'FileController@storeVideo');
+    Route::post('/product/image-upload', 'FileController@storeImage');
+    Route::post('/product/video-upload', 'FileController@storeVideo');
+    Route::post('/product-defect/image-upload', 'FileController@storeImageDefect');
+    Route::post('/product-defect/video-upload', 'FileController@storeVideoDefect');
+    Route::delete('/', 'FileController@delete');
 });
