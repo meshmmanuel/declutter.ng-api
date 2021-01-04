@@ -23,7 +23,12 @@ class ProductService
 
     public function incomplete($user_id)
     {
-        return Product::where('user_id', $user_id)->whereNull('description')->orWhereNull('selling_price')->first();
+        return Product::where('user_id', $user_id)
+            ->where(function ($query) {
+                $query->whereNull('description')
+                    ->orWhereNull('selling_price');
+            })
+            ->first();
     }
 
     public function find($id)
@@ -52,7 +57,12 @@ class ProductService
 
     public function deleteIncomplete($user_id)
     {
-        return Product::where('user_id', $user_id)->whereNull('description')->orWhereNull('selling_price')->forceDelete();
+        return Product::where('user_id', $user_id)
+            ->where(function ($query) {
+                $query->whereNull('description')
+                    ->orWhereNull('selling_price');
+            })
+            ->forceDelete();
     }
 
     public function attachFile(Product $product, $file_data)
