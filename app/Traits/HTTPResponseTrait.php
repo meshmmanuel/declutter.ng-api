@@ -31,6 +31,10 @@ trait HTTPResponseTrait
         if (strpos($message, "'user_id' cannot be null") !== false) {
             $message = "Unauthenticated";
         }
+        // Check if message has  duplicate entry
+        if (strpos($message, "Duplicate entry") !== false) {
+            $message = "Duplicate entry";
+        }
 
         return response()->json([
             'success' => false,

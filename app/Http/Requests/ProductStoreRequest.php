@@ -28,6 +28,7 @@ class ProductStoreRequest extends FormRequest
             'name' => 'required|max:255',
             'description' => 'required',
             'selling_price' => 'required',
+            'product_status' => 'required',
             'video' => 'required',
             'images' => 'required',
             'defect.*.description' => 'required_with:defect.*.video',

@@ -11,7 +11,7 @@ class Product extends Model
 {
     use HasFactory, SoftDeletes, Filterable;
 
-    protected $fillable = ['name', 'description', 'selling_price', 'user_id', 'release_date', 'status'];
+    protected $fillable = ['name', 'description', 'selling_price', 'user_id', 'release_date', 'status', 'product_status'];
     protected $with = ['files', 'defect'];
 
     // Relationships

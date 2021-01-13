@@ -28,7 +28,8 @@ class CustomStoreRequest extends FormRequest
             'name' => 'required|max:255',
             'description' => 'required',
             'selling_price' => 'required',
-            'release_date' => 'required'
+            'release_date' => 'required',
+            'product_status' => 'required'
         ];
     }
 }

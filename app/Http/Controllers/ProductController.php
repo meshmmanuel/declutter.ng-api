@@ -58,7 +58,8 @@ class ProductController extends Controller
                 "name" => $request->name,
                 "description" => $request->description,
                 "selling_price" => $request->selling_price,
-                "release_date" => $request->release_date
+                "release_date" => $request->release_date,
+                "product_status" => $request->product_status
             ];
 
             // create product model
@@ -184,7 +185,8 @@ class ProductController extends Controller
                 "name" => $request->name,
                 "description" => $request->description,
                 "selling_price" => $request->selling_price,
-                "release_date" => $request->release_date
+                "release_date" => $request->release_date,
+                "product_status" => $request->product_status
             ];
 
             // Checj if product description has been filled
@@ -254,7 +256,8 @@ class ProductController extends Controller
                 "name" => $request->name,
                 "description" => $request->description,
                 "selling_price" => $request->selling_price,
-                "release_date" => $request->release_date
+                "release_date" => $request->release_date,
+                "product_status" => $request->product_status
             ];
 
             // create product model
