@@ -78,3 +78,5 @@ Route::group(['prefix' => 'files', 'middleware' => 'auth:api'], function () {
     Route::post('/product-defect/video-upload', 'FileController@storeVideoDefect');
     Route::delete('/', 'FileController@delete');
 });
+
+Route::post('/how-you-heard-about-us', 'HeardAboutUsController@index');

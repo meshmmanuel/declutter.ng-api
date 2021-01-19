@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class RemoveUniquePhone extends Migration
+class CreateHeardAboutUsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,11 @@ class RemoveUniquePhone extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            // $table->dropUnique('users_phone_unique');
+        Schema::create('heard_about_us', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('platform');
+            $table->integer('count');
+            $table->timestamps();
         });
     }
 
@@ -25,6 +28,6 @@ class RemoveUniquePhone extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('heard_about_us');
     }
 }
