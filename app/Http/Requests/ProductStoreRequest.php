@@ -29,11 +29,11 @@ class ProductStoreRequest extends FormRequest
             'description' => 'required',
             'selling_price' => 'required',
             'product_status' => 'required',
-            'video' => 'required',
+            'video' => 'sometimes',
             'images' => 'required',
-            'defect.*.description' => 'required_with:defect.*.video',
-            'defect.*.video' => 'required_with:defect.*.description',
-            'defect.*.images' => 'sometimes',
+            'defect.*.description' => 'required',
+            'defect.*.video' => 'sometimes',
+            'defect.*.images' => 'required',
         ];
     }
 
