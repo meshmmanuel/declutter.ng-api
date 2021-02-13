@@ -257,7 +257,9 @@ class ProductController extends Controller
                 "description" => $request->description,
                 "selling_price" => $request->selling_price,
                 "release_date" => $request->release_date,
-                "product_status" => $request->product_status
+                "product_status" => $request->product_status,
+                "customer_name" => $request->get('customer_name'),
+                "customer_phone" => $request->get('customer_phone'),
             ];
 
             // create product model
