@@ -348,13 +348,13 @@ class ProductController extends Controller
     {
         try {
             $user_id = Auth::id();
-
-            $data = [
-                'role' => Auth::user()->role,
-                $this->productService->incomplete($user_id)
-            ];
-
-            return $this->successResponse('Retrieved incomplete product', 200, json_encode($data));
+            return response()->json([
+                'success' => true,
+                'message' => 'Retrieved incomplete product',
+                'data' => $this->productService->incomplete($user_id),
+                'user_role' => isset(Auth::user()->role) ? Auth::user()->role : null
+            ], 200);
+            // return $this->successResponse('Retrieved incomplete product', 200, $this->productService->incomplete($user_id));
         } catch (\Exception $ex) {
             return $this->errorResponse($ex->getMessage(), 400);
         }
