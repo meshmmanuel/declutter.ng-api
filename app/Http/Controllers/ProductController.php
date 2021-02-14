@@ -348,7 +348,13 @@ class ProductController extends Controller
     {
         try {
             $user_id = Auth::id();
-            return $this->successResponse('Retrieved incomplete product', 200, $this->productService->incomplete($user_id));
+
+            $data = [
+                'role' => Auth::user()->role,
+                $this->productService->incomplete($user_id)
+            ];
+
+            return $this->successResponse('Retrieved incomplete product', 200,);
         } catch (\Exception $ex) {
             return $this->errorResponse($ex->getMessage(), 400);
         }
