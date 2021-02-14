@@ -354,7 +354,7 @@ class ProductController extends Controller
                 $this->productService->incomplete($user_id)
             ];
 
-            return $this->successResponse('Retrieved incomplete product', 200, $data);
+            return $this->successResponse('Retrieved incomplete product', 200, json_encode($data));
         } catch (\Exception $ex) {
             return $this->errorResponse($ex->getMessage(), 400);
         }
