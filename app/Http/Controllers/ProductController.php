@@ -7,6 +7,7 @@ use App\Http\Requests\ProductStoreRequest;
 use App\Http\Requests\RegisterIncompleteProductRequest;
 use App\Http\Resources\ProductTransformer;
 use App\Models\Product;
+use App\Models\User;
 use App\Services\DefectService;
 use App\Services\FileService;
 use App\Services\ProductService;
@@ -179,6 +180,8 @@ class ProductController extends Controller
     public function customStore(CustomStoreRequest $request)
     {
         try {
+            // user
+            $user = User::find(Auth::id());
             // product_data
             $data = [
                 "user_id" => Auth::id(),
@@ -187,9 +190,9 @@ class ProductController extends Controller
                 "selling_price" => $request->selling_price,
                 "release_date" => $request->release_date,
                 "product_status" => $request->product_status,
-                "customer_name" => $request->get('customer_name'),
-                "customer_phone" => $request->get('customer_phone'),
-                "customer_email" => $request->get('customer_email'),
+                "customer_name" => $user->role === 'admin' ? $request->get('customer_name') : $user->name,
+                "customer_phone" => $user->role === 'admin' ? $request->get('customer_phone') : $user->phone,
+                "customer_email" => $user->role === 'admin' ? $request->get('customer_email') : $user->email,
                 "reason" => $request->get('reason')
             ];
 
