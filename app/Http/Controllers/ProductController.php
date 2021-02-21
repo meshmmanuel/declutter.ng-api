@@ -188,7 +188,9 @@ class ProductController extends Controller
                 "release_date" => $request->release_date,
                 "product_status" => $request->product_status,
                 "customer_name" => $request->get('customer_name'),
-                "customer_phone" => $request->get('customer_phone')
+                "customer_phone" => $request->get('customer_phone'),
+                "customer_email" => $request->get('customer_email'),
+                "reason" => $request->get('reason')
             ];
 
             // Checj if product description has been filled
