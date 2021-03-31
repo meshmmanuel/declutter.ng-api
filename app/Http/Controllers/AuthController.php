@@ -29,6 +29,8 @@ class AuthController extends Controller
                 'email' => $request->email,
                 'phone' => $request->phone,
                 'pickup_address' => $request->pickup_address,
+                'pickup_coordinates' => $request->get('pickup_coordinates'),
+                'pickup_time' => $request->get('pickup_time'),
                 'password' => bcrypt("password")
             ];
 

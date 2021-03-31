@@ -24,7 +24,9 @@ class User extends Authenticatable
         'email',
         'phone',
         'pickup_address',
-        'password'
+        'password',
+        'pickup_time',
+        'pickup_coordinates'
     ];
 
     /**

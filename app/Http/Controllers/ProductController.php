@@ -66,26 +66,28 @@ class ProductController extends Controller
             // create product model
             $product = $this->productService->create($data);
             // get video
-            $product_video = $request->file('video');
-            //Move Uploaded File
-            $filePath = 'declutter_uploads/videos';
-            // Remane file
-            $newFileName = renameFile($product_video->getClientOriginalExtension());
+            if ($request->has('video')) {
+                $product_video = $request->file('video');
+                //Move Uploaded File
+                $filePath = 'declutter_uploads/videos';
+                // Remane file
+                $newFileName = renameFile($product_video->getClientOriginalExtension());
 
-            // Upload video to storage
-            Storage::disk('s3')->put($filePath . '/' . $newFileName, fopen($request->file('video'), 'r+'), 'public');
-            // Storage::disk('s3')->put($filePath . '/' . $newFileName, file_get_contents($product_video->getRealPath()), 'public');
-            // Storage::disk('local')->put($filePath . '/' . $newFileName, file_get_contents($product_video->getRealPath()));
+                // Upload video to storage
+                Storage::disk('s3')->put($filePath . '/' . $newFileName, fopen($request->file('video'), 'r+'), 'public');
+                // Storage::disk('s3')->put($filePath . '/' . $newFileName, file_get_contents($product_video->getRealPath()), 'public');
+                // Storage::disk('local')->put($filePath . '/' . $newFileName, file_get_contents($product_video->getRealPath()));
 
-            // file data
-            $fileData = [
-                'source' => Storage::disk('s3')->url($filePath . '/' . $newFileName),
-                'path' => $filePath . '/' . $newFileName,
-                'file_type' => 'video'
-            ];
+                // file data
+                $fileData = [
+                    'source' => Storage::disk('s3')->url($filePath . '/' . $newFileName),
+                    'path' => $filePath . '/' . $newFileName,
+                    'file_type' => 'video'
+                ];
 
-            // attach video to product
-            $this->productService->attachFile($product, $fileData);
+                // attach video to product
+                $this->productService->attachFile($product, $fileData);
+            }
 
             if (isset($request->images)) {
                 $product_images = $request->images;
@@ -182,17 +184,30 @@ class ProductController extends Controller
         try {
             // user
             $user = User::find(Auth::id());
+
+            // check if user email exists
+            if ($user->role === 'admin') {
+                $user = User::firstOrCreate([
+                    'email' => $request->get('customer_email')
+                ], [
+                    'name' => $request->get('customer_name'),
+                    'phone' => $request->get('customer_phone'),
+                    'email' => $request->get('customer_email'),
+                    'password' => bcrypt("password")
+                ]);
+            }
+
             // product_data
             $data = [
-                "user_id" => Auth::id(),
+                "user_id" => $user->id,
                 "name" => $request->name,
                 "description" => $request->description,
                 "selling_price" => $request->selling_price,
                 "release_date" => $request->release_date,
                 "product_status" => $request->product_status,
-                "customer_name" => $user->role === 'admin' ? $request->get('customer_name') : $user->name,
-                "customer_phone" => $user->role === 'admin' ? $request->get('customer_phone') : $user->phone,
-                "customer_email" => $user->role === 'admin' ? $request->get('customer_email') : $user->email,
+                "customer_name" => $user->name,
+                "customer_phone" => $user->phone,
+                "customer_email" => $user->email,
                 "reason" => $request->get('reason')
             ];
 
